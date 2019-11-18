@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue 3 hello world</title>
+    <script src="./packages/vue/dist/vue.global.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <h1>{{state.msg}}</h1>
+        <input type="text" v-model="state.fistName"  name="" id="">
+        <input type="text" v-model="state.lastName"  name="" id="">
+        <p>{{stateB}}</p>
+        <div>{{state.name}}</div>
+        <div>{{computedState.name}}</div>
+        <div>{{computedName}}</div>
+        <div>
+            <button @click="add(state, 'count')">+</button>
+            <span>{{state.count}}</span>
+            <button @click="sub(state, 'count')">-</button> 
+        </div>
+    </div>
+
+    <script>
+
+        const { createApp, reactive, computed, watch, onMounted, onUnmounted } = Vue
+
+
+        // 定义一个Vue组件
+        const App = {
+            setup() {
+                // reactive 获取一个响应数据对象， 如果不是对象会提示不能响应
+                const state = reactive({
+                    msg: 'hello world',
+                    fistName: 'yang',
+                    lastName: 'jinping',
+                    count: 0,
+
+                    // 在自己 reactive 配置对象中使用计算属性
+                    name: computed(() => {
+                        return "我是 state.name：" + state.fistName + state.lastName;
+                    })
+                });
+                
+                // 定义多过可响应对象
+                const stateB = reactive({ 
+                    msg: '我是另外一个状态对象'
+                });
+
+                const computedState = {
+                    // 使用其它 reactive 配置对象的计算属性
+                    name: computed(() => {
+                        return "我是 computedState.name：" + state.fistName  + state.lastName;
+                    })
+                }
+
+                // 直接使用计算属性
+                const computedName =  computed(() => {
+                    return "我是 computedName：" + state.fistName + state.lastName;
+                })
+
+                // 使用watch钩子
+                watch( () => {
+                    console.log(state.fistName);
+                });
+                
+                // watch 多个属性
+                // 只能watch reactive 钩子定义的对象
+                watch(() => {
+                    console.log(state.name);
+                })
+                
+                
+                // 使用生命周期钩子
+                onMounted(() => {
+                    console.log( 'onMounted A')
+                })
+
+
+                // 定义一系列函数
+                // 使用普通函数
+                function add(state, key){
+                    state[key]++;
+                    console.log(this); // 一个vue代理对象， 可用于访问vue
+                    
+                }
+                // 使用箭头函数
+                const sub = (state, key) => { 
+                    state[key]--;
+                    console.log(this); // window
+                }
+
+                return {
+                    // 将属性抛出给vue实例
+                    state,
+                    stateB,
+                    computedState,
+                    computedName,
+
+                    // 将方法抛出给vue实例
+                    add,
+                    sub
+                }
+            }
+        }
+
+        createApp().mount(App, '#app');
+    </script>
+</body>
+
+</html>
