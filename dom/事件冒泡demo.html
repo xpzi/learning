@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>什么是事件冒泡</title>
+</head>
+<body>
+
+
+    <div class="box1">
+        <div class="box2-1">
+            <div class="box3-1">AAAAAAA
+
+                <div>
+                    <a id="mylink" href="#daf">点我跳转</a>
+                </div>
+
+            </div>
+            <div class="box3-2">BBBBBBB</div>
+        </div>
+        <div class="box2-2">
+                <div class="box3-1">CCCCC</div>
+                <div class="box3-2">DDDD</div>
+        </div>
+    </div>
+    <script>
+
+       ;(function(doc){
+        var queryAll = doc.querySelectorAll
+        var querya = doc.querySelector
+
+
+
+        mylink.addEventListener('click',  function(e){
+            console.log('mylink----false: ',this, e);
+            e.stopPropagation();
+        }, false)
+        mylink.addEventListener('click',  function(e){
+            console.log('mylink----true: ',this, e);
+            e.stopPropagation();
+        }, true)
+        // console.log(query('.box1'));
+        
+        doc.querySelector('.box1').addEventListener('click', function(e){
+            
+            console.log('box1-false: ',this, e);
+            // e.stopPropagation();
+        }, false);
+        doc.querySelector('.box1').addEventListener('click', function(e){
+            e.preventDefault();
+            console.log('box1-true: ',this, e);
+            // e.stopPropagation();
+        }, true);
+
+    
+
+        // doc.querySelector('.box2-1').addEventListener('click', function(e){
+        //     e.stopPropagation();
+        //     console.log('box2-1-false: ',this, e);
+        // }, false);
+        // doc.querySelector('.box2-1').addEventListener('click', function(e){
+        //     e.stopPropagation();
+        //     console.log('box2-1-true: ', this,e);
+        // }, true);
+
+        // doc.querySelector('.box3-1').addEventListener('click', function(e){
+        //     // e.stopPropagation();
+        //     console.log('box3-1-true: ', this,e);
+        // }, true);
+        // doc.querySelector('.box3-1').addEventListener('click', function(e){
+        //     // e.stopPropagation();
+        //     console.log('box3-1-false: ',this, e);
+        // }, false);
+       
+    })(document);
+    </script>
+</body>
+</html>
